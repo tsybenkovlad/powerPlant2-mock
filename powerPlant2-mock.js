@@ -1,5 +1,6 @@
-import express from "express"
+import express, {request, response} from "express"
 import { format } from 'date-fns'
+import fs from "node:fs";
 const app = express();
 app.use(express.json());
 function getRandomIntInclusive(min, max) {
@@ -36,6 +37,10 @@ app.get("/info", (request, response) => {
             "minute": Number(format(date,"mm")),
             "second": Number(format(date,"ss"))
         }});
+});
+app.get("/wifi", (request, response) => {
+    let dataWifi = JSON.parse(fs.readFileSync("wifi.json", "utf8"));
+    response.send(dataWifi)
 });
 app.listen(8080, () => {
     console.log("Server started");
