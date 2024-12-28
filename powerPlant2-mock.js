@@ -52,7 +52,7 @@ app.post("/wifi", (request, response) => {
     response.send({})
 });
 app.get("/wifi", (request, response) => {
-    let dataWifi = JSON.parse(fs.readFileSync("data.json", "utf8"));
+    let dataWifi = JSON.parse(fs.readFileSync(FILE_NAME, "utf8"));
     delete dataWifi.stationPassword
     delete dataWifi.apPassword
     response.send(dataWifi)
