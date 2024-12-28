@@ -48,18 +48,14 @@ const FILE_NAME = "data.json"
 app.post("/wifi", (request, response) => {
     let obj = request.body
     console.log(obj)
-    if (!fs.existsSync(FILE_NAME)) {
-        fs.writeFileSync(FILE_NAME, JSON.stringify(obj, null, "   "))
-    }else{
-        fs.writeFileSync(FILE_NAME, JSON.stringify(obj, null, "   "))
-    }
-    let dataObj = JSON.parse(fs.readFileSync(FILE_NAME, "utf8"))
-    response.send(dataObj)
+    fs.writeFileSync(FILE_NAME, JSON.stringify(obj, null, "   "))
+    response.send({})
 });
 app.get("/wifi", (request, response) => {
     let dataWifi = JSON.parse(fs.readFileSync("data.json", "utf8"));
-    let { stationPassword, ...newObj } = dataWifi;
-    response.send(newObj)
+    delete dataWifi.stationPassword
+    delete dataWifi.apPassword
+    response.send(dataWifi)
 });
 app.listen(8080, () => {
     console.log("Server started");
