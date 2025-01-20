@@ -2,3 +2,4 @@ node_modules
 .idea
 *.iml
 system.json
+wifi.json
