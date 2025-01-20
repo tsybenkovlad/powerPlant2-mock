@@ -3,3 +3,4 @@ node_modules
 *.iml
 system.json
 wifi.json
+status.json

@@ -46,6 +46,7 @@ app.get("/info", (request, response) => {
 });
 const WIFI_FILE_NAME = "wifi.json"
 const SYSTEM_FILE_NAME = "system.json"
+const STATUS_FILE_NAME = "status.json"
 app.post("/system", (request, response) => {
     let obj = request.body
     console.log(obj)
@@ -75,28 +76,56 @@ app.get("/system", (request, response) => {
     }
     response.send(obj)
 });
+app.post("/upgrade/status", (request, response) => {
+    let obj = request.body
+    console.log(obj)
+    fs.writeFileSync(STATUS_FILE_NAME, JSON.stringify(obj, null, "   "))
+    response.send({})
+});
+app.get("/upgrade/status", (request, response) => {
+    let obj = {
+        "status": 1
+    }
+    if (fs.existsSync(STATUS_FILE_NAME)) {
+        let statusObj = JSON.parse(fs.readFileSync(STATUS_FILE_NAME, "utf8"))
+        Object.assign(obj, statusObj)
+    }
+    response.send(obj)
+});
 app.post("/upgrade/check", (request, response) => {
     function f() {
         response.send({})
     }
+
     setTimeout(f, 3000)
 });
 app.post("/upgrade", (request, response) => {
     function f() {
         response.send({})
     }
+
     setTimeout(f, 1000)
 });
 app.post("/wifi", (request, response) => {
     let obj = request.body
     console.log(obj)
     fs.writeFileSync(WIFI_FILE_NAME, JSON.stringify(obj, null, "   "))
+    response.send({})
 });
 app.get("/wifi", (request, response) => {
-    let dataWifi = JSON.parse(fs.readFileSync(WIFI_FILE_NAME, "utf8"));
-    delete dataWifi.stationPassword
-    delete dataWifi.apPassword
-    response.send(dataWifi)
+    let obj = {
+        "apMode": 0,
+        "hostName": "pwr2dev",
+        "apName": "PowerII",
+        "stationName": "Sigma"
+    }
+    if (fs.existsSync(WIFI_FILE_NAME)) {
+        let dataWifi = JSON.parse(fs.readFileSync(WIFI_FILE_NAME, "utf8"));
+        Object.assign(obj, dataWifi)
+    }
+    delete obj.stationPassword
+    delete obj.apPassword
+    response.send(obj)
 });
 app.listen(8080, () => {
     console.log("Server started");
