@@ -44,15 +44,56 @@ app.get("/info", (request, response) => {
         }
     });
 });
-const FILE_NAME = "data.json"
+const WIFI_FILE_NAME = "wifi.json"
+const SYSTEM_FILE_NAME = "system.json"
+app.post("/system", (request, response) => {
+    let obj = request.body
+    console.log(obj)
+    fs.writeFileSync(SYSTEM_FILE_NAME, JSON.stringify(obj, null, "   "))
+    response.send({})
+});
+app.get("/system", (request, response) => {
+    let obj = {
+        "imageUrl": "https://pwr2.s.fc0.org/image",
+        "wwwPartitionIndex": 0,
+        "appVersion": 5,
+        "upgradeCheck": 0,
+        "remoteVersion": 6,
+        "otaRunning": "ota_1",
+        "otaConfigured": "ota_1",
+        "otaUpgrade": "ota_0",
+        "pushMetrics": false,
+        "pushDelayS": 15,
+        "pushGatewayUrl": "https://gw.s.fc0.org/metrics/job/pwr2/instance/home",
+        "authGateway": false,
+        "gwUser": "",
+        "gwPassword": ""
+    }
+    if (fs.existsSync(SYSTEM_FILE_NAME)) {
+        let systemObj = JSON.parse(fs.readFileSync(SYSTEM_FILE_NAME, "utf8"))
+        Object.assign(obj, systemObj)
+    }
+    response.send(obj)
+});
+app.post("/upgrade/check", (request, response) => {
+    function f() {
+        response.send({})
+    }
+    setTimeout(f, 3000)
+});
+app.post("/upgrade", (request, response) => {
+    function f() {
+        response.send({})
+    }
+    setTimeout(f, 1000)
+});
 app.post("/wifi", (request, response) => {
     let obj = request.body
     console.log(obj)
-    fs.writeFileSync(FILE_NAME, JSON.stringify(obj, null, "   "))
-    response.send({})
+    fs.writeFileSync(WIFI_FILE_NAME, JSON.stringify(obj, null, "   "))
 });
 app.get("/wifi", (request, response) => {
-    let dataWifi = JSON.parse(fs.readFileSync(FILE_NAME, "utf8"));
+    let dataWifi = JSON.parse(fs.readFileSync(WIFI_FILE_NAME, "utf8"));
     delete dataWifi.stationPassword
     delete dataWifi.apPassword
     response.send(dataWifi)
